@@ -61,11 +61,13 @@
           name = "api-base";
           tag  = "dev";
           fromImage = pkgs.dockerTools.pullImage {
+            name = "debian";
+            tag  = "bookworm-slim";
             imageName      = "debian";
             imageDigest    = "sha256:b1a741487078b369e78119849663d7f1a5341ef2768798f7b7406c4240f86aef";
-            hash           = "sha256-GsiMvKEcc1SbPNJubtU0xFNBbno5PMiQY9pxKRcbeK0=";
             finalImageName = "debian";
             finalImageTag  = "bookworm-slim";
+            sha256         = "sha256-GsiMvKEcc1SbPNJubtU0xFNBbno5PMiQY9pxKRcbeK0=";
           };
           contents = devPkgs;
           config = {
