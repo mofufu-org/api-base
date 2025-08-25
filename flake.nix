@@ -92,6 +92,12 @@
             [ -e ./bin/sh ] || ln -s ../usr/bin/busybox ./bin/sh
 
             [ -e ./usr/bin/env ] || ln -s busybox ./usr/bin/env
+
+            mkdir -p sbin lib/x86_64-linux-gnu
+
+            [ -e sbin/ldconfig ] || ln -s ../usr/sbin/ldconfig sbin/ldconfig
+
+            [ -e lib/x86_64-linux-gnu/libc.so.6 ] || ln -s /usr/lib/x86_64-linux-gnu/libc.so.6 lib/x86_64-linux-gnu/libc.so.6
           '';
         };
         packages.runtime  = mkImage {
