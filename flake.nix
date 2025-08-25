@@ -70,11 +70,11 @@
             sha256         = "sha256-GsiMvKEcc1SbPNJubtU0xFNBbno5PMiQY9pxKRcbeK0=";
           };
           copyToRoot = [
-            pkgs.buildEnv {
+            (pkgs.buildEnv {
               name        = "api-base-dev-bin";
               paths       = devPkgs;
               pathsToLink = [ "/bin" ];
-            }
+            })
           ];
           config = {
             WorkingDir = "/workspace";
