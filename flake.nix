@@ -46,7 +46,7 @@
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc usr/bin bin
+              mkdir -p etc usr/bin bin sbin
               ln -sf ${pkgs.coreutils}/bin/env usr/bin/env
               ln -sf ${pkgs.bashInteractive}/bin/bash bin/sh
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
@@ -55,8 +55,7 @@
               ln -sf ${pkgs.glibc.bin}/bin/ldd usr/bin/ldd
               cat > sbin/ldconfig <<'EOF'
               #!/bin/sh
-              exec /niv/store/*-glibc-*/bin/ldconfig
-              -C /etc/ld.so.cache "$@"
+              exec /niv/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"
               EOF
               chmod +x sbin/ldconfig
             '';
