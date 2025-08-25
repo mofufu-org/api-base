@@ -61,6 +61,11 @@
               ln -sf ${pkgs.gnutar}/bin/tar       usr/bin/tar
               ln -sf ${pkgs.gzip}/bin/gzip        usr/bin/gzip
               ln -sf ${pkgs.gnused}/bin/sed       usr/bin/sed
+              ln -sf ${pkgs.shadow}/bin/id         usr/bin/id
+              ln -sf ${pkgs.shadow}/bin/getent     usr/bin/getent
+              ln -sf ${pkgs.which}/bin/which       usr/bin/which
+              ln -sf ${pkgs.bashInteractive}/bin/bash usr/bin/bash
+
             '';
           };
       in {
