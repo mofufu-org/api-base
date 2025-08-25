@@ -25,7 +25,13 @@
               WorkingDir = workdir;
               Env = [ "LANG=C.UTF-8" "LC_ALL=C.UTF-8" "HOME=/root" "PATH=/bin:/usr/bin:/sbin:/usr/sbin" ];
               Cmd = if cmd == null then null else cmd;
+              User = "root";
             };
+            extraCommands = "
+              mkdir -p etc
+              echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
+              echo "root:x:0:" > etc/group
+            ";
           };
       in {
         devShells.default = pkgs.mkShell { packages = devPkgs; };
