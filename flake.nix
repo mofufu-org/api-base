@@ -13,10 +13,25 @@
         elixir  = pkgs.beam.packages.erlang_26.elixir_1_16;
         psql    = pkgs.postgresql_16;
 
-        devPkgs = [ pkgs.bashInteractive pkgs.coreutils pkgs.git pkgs.curl pkgs.openssl pkgs.gnutar erlang elixir psql ];
-        rtPkgs  = [ pkgs.bash pkgs.coreutils pkgs.openssl erlang ];
+        commonPkgs = [
+          pkgs.bashInteractive
+          pkgs.coreutils
+          pkgs.git
+          pkgs.curl
+          pkgs.openssl
+          erlang
+          elixir
+          psql
+        ];
 
-        webuiPkgs = devPkgs ++ [ pkgs.openvscode-server ];
+        devPkgs   = commonPkgs ++ [
+          pkgs.gnutar
+          pkgs.gzip
+        ];
+        rtPkgs    = commonPkgs;
+        webuiPkgs = commonPkgs ++ [
+          pkgs.openvscode-server
+        ];
 
         mkImage = { name, tag, contents, workdir, cmd ? null }:
           pkgs.dockerTools.buildLayeredImage {
@@ -38,7 +53,6 @@
 
         packages.dev      = mkImage { name="api-base"; tag="dev";      contents=devPkgs;   workdir="/workspace"; cmd=[ "sleep" "infinity" ]; };
         packages.runtime  = mkImage { name="api-base"; tag="runtime";  contents=rtPkgs;    workdir="/app";       };
-
         packages.webui    = mkImage { name="api-base"; tag="webui";    contents=webuiPkgs; workdir="/workspace"; cmd=[ "openvscode-server" "--host" "0.0.0.0" "--port" "8080" "--without-connection-token" "--disable-telemetry" "--extensions-dir" "/root/.vscode-oss/extensions" ]; };
 
         packages.default  = self.packages.${system}.dev;
