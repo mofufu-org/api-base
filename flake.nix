@@ -86,7 +86,7 @@
           cmd      = [
             "code-server"
             "--auth"           "none"
-            "--bind-addr"      "127.0.0.1:8080"
+            "--bind-addr"      "0.0.0.0:8080"
             "--extensions-dir" "/root/.vscode-oss/extensions"
           ];
         };
