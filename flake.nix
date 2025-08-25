@@ -14,8 +14,6 @@
         psql    = pkgs.postgresql_16;
 
         commonPkgs = [
-          pkgs.git
-          pkgs.curl
           pkgs.openssl
           erlang
           elixir
@@ -23,11 +21,15 @@
         ];
 
         devPkgs   = commonPkgs ++ [
+          pkgs.git
+          pkgs.curl
           pkgs.busybox
           pkgs.glibc.bin
         ];
         rtPkgs    = commonPkgs;
         webuiPkgs = commonPkgs ++ [
+          pkgs.git
+          pkgs.curl
           pkgs.bashInteractive
           pkgs.coreutils
           pkgs.openvscode-server
@@ -43,22 +45,21 @@
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc bin usr/bin sbin
+              mkdir -p etc bin usr/bin sbin tmp
+              chmod 1777 tmp
 
               ln -sf ${pkgs.busybox}/bin/busybox bin/busybox
 
               bin/busybox --install -s /bin
               bin/busybox --install -s /usr/bin
 
-              ln -sf ${pkgs.coreutils}/bin/env usr/bin/env
-              ln -sf ${pkgs.bashInteractive}/bin/bash bin/sh
-
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
-
               ln -sf /bin/busybox usr/bin/env
-              ln -sf /bin/busybox bin/sh
+              ln -sf /bin/sh      usr/bin/bash
 
+              ln -sf ${pkgs.coreutils}/bin/env usr/bin/env
+              ln -sf ${pkgs.bashInteractive}/bin/bash bin/sh
               ln -sf ${pkgs.glibc.bin}/bin/ldd usr/bin/ldd
               touch etc/ld.so.cache
               printf '%s\n' '#!/bin/sh' 'exec /nix/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"' \
