@@ -82,6 +82,10 @@
           };
           extraCommands = ''
             mkdir -p bin
+
+            echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
+            echo "root:x:0:" > etc/group
+            
             ln -sf ${pkgs.busybox}/bin/busybox bin/sh
           '';
         };
