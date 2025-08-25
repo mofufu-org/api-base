@@ -28,6 +28,8 @@
           pkgs.gnutar
           pkgs.gzip
           pkgs.findutils
+          pkgs.glibc.bin
+          pkgs.gnugrep
         ];
         rtPkgs    = commonPkgs;
         webuiPkgs = commonPkgs ++ [
