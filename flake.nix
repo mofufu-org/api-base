@@ -16,6 +16,8 @@
         devPkgs = [ pkgs.bashInteractive pkgs.coreutils pkgs.git pkgs.curl pkgs.openssl erlang elixir psql ];
         rtPkgs  = [ pkgs.bash pkgs.coreutils pkgs.openssl erlang ];
 
+        webuiPkgs = devPkgs ++ [ pkgs.openvscode-server ];
+
         mkImage = { name, tag, contents, workdir, cmd ? null }:
           pkgs.dockerTools.buildLayeredImage {
             inherit name tag contents;
@@ -28,10 +30,12 @@
       in {
         devShells.default = pkgs.mkShell { packages = devPkgs; };
 
-        packages.dev      = mkImage { name="api-base"; tag="dev";      contents=devPkgs; workdir="/workspace"; cmd=[ "sleep" "infinity" ]; };
-        packages.runtime  = mkImage { name="api-base"; tag="runtime";  contents=rtPkgs;  workdir="/app";       };
+        packages.dev      = mkImage { name="api-base"; tag="dev";      contents=devPkgs;   workdir="/workspace"; cmd=[ "sleep" "infinity" ]; };
+        packages.runtime  = mkImage { name="api-base"; tag="runtime";  contents=rtPkgs;    workdir="/app";       };
 
-        packages.default = self.packages.${system}.dev;
+        packages.webui    = mkImage { name="api-base"; tag="webui";    contents=webuiPkgs; workdir="/workspace"; cmd=[ "openvscode-server" "--host" "0.0.0.0" "--port" "8080" "--without-connection-token" "--disable-telemetry" "--extensions-dir" "/root/.vscode-oss/extensions" ]; };
+
+        packages.default  = self.packages.${system}.dev;
       }
     );
 }
