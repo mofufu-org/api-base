@@ -58,6 +58,7 @@
       in {
         devShells.default = pkgs.mkShell { packages = devPkgs; };
 
+
         packages.dev = pkgs.dockerTools.buildImage {
           name = "api-base";
           tag  = "dev";
@@ -68,7 +69,13 @@
             finalImageTag  = "bookworm-slim";
             sha256         = "sha256-GsiMvKEcc1SbPNJubtU0xFNBbno5PMiQY9pxKRcbeK0=";
           };
-          contents = devPkgs;
+          contents = [
+            pkgs.buildEnv {
+              name        = "api-base-dev-bin";
+              paths       = devPkgs;
+              pathsToLink = [ "/bin" ];
+            }
+          ];
           config = {
             WorkingDir = "/workspace";
             Cmd = [ "sleep" "infinity" ];
@@ -76,29 +83,10 @@
               "LANG=C.UTF-8"
               "LC_ALL=C.UTF-8"
               "HOME=/root"
-              "PATH=${pkgs.lib.makeBinPath devPkgs}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             ];
             User = "root";
           };
-          extraCommands = ''
-            mkdir -p ./usr/bin ./etc
-
-            echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
-            echo "root:x:0:" > etc/group
-
-            [ -x ./usr/bin/busybox ] || cp ${pkgs.busybox}/bin/busybox ./usr/bin/busybox && chmod +x ./usr/bin/busybox
-
-            mkdir -p ./bin
-            [ -e ./bin/sh ] || ln -s ../usr/bin/busybox ./bin/sh
-
-            [ -e ./usr/bin/env ] || ln -s busybox ./usr/bin/env
-
-            mkdir -p sbin lib/x86_64-linux-gnu
-
-            [ -e sbin/ldconfig ] || ln -s ../usr/sbin/ldconfig sbin/ldconfig
-
-            [ -e lib/x86_64-linux-gnu/libc.so.6 ] || ln -s /usr/lib/x86_64-linux-gnu/libc.so.6 lib/x86_64-linux-gnu/libc.so.6
-          '';
         };
         packages.runtime  = mkImage {
           name     = "api-base";
