@@ -14,8 +14,6 @@
         psql    = pkgs.postgresql_16;
 
         commonPkgs = [
-          pkgs.bashInteractive
-          pkgs.coreutils
           pkgs.git
           pkgs.curl
           pkgs.openssl
@@ -25,14 +23,13 @@
         ];
 
         devPkgs   = commonPkgs ++ [
-          pkgs.gnutar
-          pkgs.gzip
-          pkgs.findutils
+          pkgs.busybox
           pkgs.glibc.bin
-          pkgs.gnugrep
         ];
         rtPkgs    = commonPkgs;
         webuiPkgs = commonPkgs ++ [
+          pkgs.bashInteractive
+          pkgs.coreutils
           pkgs.openvscode-server
         ];
 
@@ -46,26 +43,26 @@
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc usr/bin bin sbin
+              mkdir -p etc bin usr/bin sbin
+
+              ln -sf ${pkgs.busybox}/bin/busybox bin/busybox
+
+              bin/busybox --install -s /bin
+              bin/busybox --install -s /usr/bin
+
               ln -sf ${pkgs.coreutils}/bin/env usr/bin/env
               ln -sf ${pkgs.bashInteractive}/bin/bash bin/sh
+
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
-              touch etc/ld.so.cache
-              ln -sf ${pkgs.glibc.bin}/bin/ldd usr/bin/ldd
-              printf '%s\n' '#!/bin/sh' \
-              'exec /nix/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"' \
-              | install -Dm755 /dev/stdin sbin/ldconfig
-              ln -sf ${pkgs.gnugrep}/bin/grep     usr/bin/grep
-              ln -sf ${pkgs.findutils}/bin/xargs  usr/bin/xargs
-              ln -sf ${pkgs.gnutar}/bin/tar       usr/bin/tar
-              ln -sf ${pkgs.gzip}/bin/gzip        usr/bin/gzip
-              ln -sf ${pkgs.gnused}/bin/sed       usr/bin/sed
-              ln -sf ${pkgs.shadow}/bin/id         usr/bin/id
-              ln -sf ${pkgs.shadow}/bin/getent     usr/bin/getent
-              ln -sf ${pkgs.which}/bin/which       usr/bin/which
-              ln -sf ${pkgs.bashInteractive}/bin/bash usr/bin/bash
 
+              ln -sf /bin/busybox usr/bin/env
+              ln -sf /bin/busybox bin/sh
+
+              ln -sf ${pkgs.glibc.bin}/bin/ldd usr/bin/ldd
+              touch etc/ld.so.cache
+              printf '%s\n' '#!/bin/sh' 'exec /nix/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"' \
+                | install -Dm755 /dev/stdin sbin/ldconfig
             '';
           };
       in {
