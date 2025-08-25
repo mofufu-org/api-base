@@ -30,7 +30,6 @@
         webuiPkgs = commonPkgs ++ [
           pkgs.git
           pkgs.curl
-          pkgs.bash
           pkgs.cacert
           pkgs.code-server
         ];
@@ -49,7 +48,7 @@
               Cmd = if cmd == null then null else cmd;
               User = "root";
             };
-            extraCommands = ecmd ++ ''
+            extraCommands = ecmd + ''
               mkdir -p etc bin
 
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
