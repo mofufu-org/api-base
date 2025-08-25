@@ -92,6 +92,10 @@
             ];
             User = "root";
           };
+          extraCommands = ''
+            mkdir -p etc/ssl/certs
+            ln -sf /etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
+          '';
         };
         packages.runtime  = mkImage {
           name     = "api-base";
