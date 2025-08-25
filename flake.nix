@@ -52,6 +52,7 @@
               mkdir -p usr/bin bin
               ln -sf $(pkgs.coreutils)/bin/env usr/bin/env
               ln -sf $(pkgs.bashInteractive)/bin/bash bin/sh
+              touch etc/ld.so.cache
             '';
           };
       in {
