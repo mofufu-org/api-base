@@ -69,7 +69,7 @@
             finalImageTag  = "bookworm-slim";
             sha256         = "sha256-GsiMvKEcc1SbPNJubtU0xFNBbno5PMiQY9pxKRcbeK0=";
           };
-          contents = [
+          copyToRoot = [
             pkgs.buildEnv {
               name        = "api-base-dev-bin";
               paths       = devPkgs;
