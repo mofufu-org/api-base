@@ -31,6 +31,7 @@
           pkgs.git
           pkgs.curl
           pkgs.bash
+          pkgs.cacert
           pkgs.code-server
         ];
 
