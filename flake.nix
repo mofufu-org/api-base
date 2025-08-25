@@ -50,7 +50,11 @@
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc bin
+              "mkdir -p etc bin etc/ssl/certs tmp root/.vscode-oss/extensions"
+
+              "chmod 1777 tmp"
+
+              "ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt"
 
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
@@ -59,20 +63,28 @@
       in {
         devShells.default = pkgs.mkShell { packages = devPkgs; };
 
-        packages.dev      = mkImage { name="api-base"; tag="dev";      contents=devPkgs;   workdir="/workspace"; cmd=[ "sleep" "infinity" ]; };
-        packages.runtime  = mkImage { name="api-base"; tag="runtime";  contents=rtPkgs;    workdir="/app";       };
+        packages.dev      = mkImage {
+          name     = "api-base";
+          tag      = "dev";
+          contents = devPkgs;
+          workdir  = "/workspace";
+          cmd      = [
+            "sleep"
+            "infinity"
+          ];
+        };
+        packages.runtime  = mkImage {
+          name     = "api-base";
+          tag      = "runtime";
+          contents = rtPkgs;
+          workdir  = "/app";
+        };
         packages.webui    = mkImage {
           name     ="api-base";
           tag      = "webui";
           contents = webuiPkgs;
           workdir  = "/workspace";
           cmd      = [
-            "mkdir -p etc/ssl/certs tmp root/.vscode-oss/extensions"
-
-            "chmod 1777 tmp"
-
-            "ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt"
-            
             "code-server"
             "--auth none"
             "--cert /etc/ssl/certs/ca-bundle.crt"
