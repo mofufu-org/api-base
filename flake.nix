@@ -13,7 +13,7 @@
         elixir  = pkgs.beam.packages.erlang_26.elixir_1_16;
         psql    = pkgs.postgresql_16;
 
-        devPkgs = [ pkgs.bashInteractive pkgs.coreutils pkgs.git pkgs.curl pkgs.openssl erlang elixir psql ];
+        devPkgs = [ pkgs.bashInteractive pkgs.coreutils pkgs.git pkgs.curl pkgs.openssl pkgs.gnutar erlang elixir psql ];
         rtPkgs  = [ pkgs.bash pkgs.coreutils pkgs.openssl erlang ];
 
         webuiPkgs = devPkgs ++ [ pkgs.openvscode-server ];
