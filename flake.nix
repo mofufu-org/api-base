@@ -43,8 +43,11 @@
               User = "root";
             };
             extraCommands = ''
-              mkdir -p tmp root/.vscode-oss/extensions
+              mkdir -p etc bin tmp root/.vscode-oss/extensions
               chmod 1777 tmp
+
+              echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
+              echo "root:x:0:" > etc/group
             '';
           };
       in {
