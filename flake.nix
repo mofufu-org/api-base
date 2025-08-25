@@ -81,7 +81,7 @@
             User = "root";
           };
           extraCommands = ''
-            rm -f bin
+            rm -r -f bin
             mkdir -p bin etc
 
             echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
