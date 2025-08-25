@@ -53,11 +53,9 @@
               echo "root:x:0:" > etc/group
               touch etc/ld.so.cache
               ln -sf ${pkgs.glibc.bin}/bin/ldd usr/bin/ldd
-              cat > sbin/ldconfig <<'EOF'
-              #!/bin/sh
-              exec /niv/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"
-              EOF
-              chmod +x sbin/ldconfig
+              printf '%s\n' '#!/bin/sh' \
+              'exec /nix/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"' \
+              | install -Dm755 /dev/stdin sbin/ldconfig
             '';
           };
       in {
