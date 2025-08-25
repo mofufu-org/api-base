@@ -30,8 +30,6 @@
         webuiPkgs = commonPkgs ++ [
           pkgs.git
           pkgs.curl
-          pkgs.bashInteractive
-          pkgs.coreutils
           pkgs.openvscode-server
         ];
 
@@ -45,25 +43,8 @@
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc bin usr/bin sbin tmp
+              mkdir -p tmp root/.vscode-oss/extensions
               chmod 1777 tmp
-
-              ln -sf ${pkgs.busybox}/bin/busybox bin/busybox
-
-              bin/busybox --install -s /bin
-              bin/busybox --install -s /usr/bin
-
-              echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
-              echo "root:x:0:" > etc/group
-              ln -sf /bin/busybox usr/bin/env
-              ln -sf /bin/sh      usr/bin/bash
-
-              ln -sf ${pkgs.coreutils}/bin/env usr/bin/env
-              ln -sf ${pkgs.bashInteractive}/bin/bash bin/sh
-              ln -sf ${pkgs.glibc.bin}/bin/ldd usr/bin/ldd
-              touch etc/ld.so.cache
-              printf '%s\n' '#!/bin/sh' 'exec /nix/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"' \
-                | install -Dm755 /dev/stdin sbin/ldconfig
             '';
           };
       in {
