@@ -86,7 +86,7 @@
           workdir  = "/workspace";
           cmd      = [
             "code-server"
-            "--auth none"
+            "--auth \"none\""
             "--cert /etc/ssl/certs/ca-bundle.crt"
             "--bind-addr 127.0.0.1:8080"
             "--extensions-dir /root/.vscode-oss/extensions"
