@@ -56,6 +56,11 @@
               printf '%s\n' '#!/bin/sh' \
               'exec /nix/store/*-glibc-*/bin/ldconfig -C /etc/ld.so.cache "$@"' \
               | install -Dm755 /dev/stdin sbin/ldconfig
+              ln -sf ${pkgs.gnugrep}/bin/grep     usr/bin/grep
+              ln -sf ${pkgs.findutils}/bin/xargs  usr/bin/xargs
+              ln -sf ${pkgs.gnutar}/bin/tar       usr/bin/tar
+              ln -sf ${pkgs.gzip}/bin/gzip        usr/bin/gzip
+              ln -sf ${pkgs.gnused}/bin/sed       usr/bin/sed
             '';
           };
       in {
