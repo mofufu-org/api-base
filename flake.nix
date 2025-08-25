@@ -23,14 +23,13 @@
         devPkgs   = commonPkgs ++ [
           pkgs.git
           pkgs.curl
-          pkgs.busybox
-          pkgs.glibc
         ];
         rtPkgs    = commonPkgs;
         webuiPkgs = commonPkgs ++ [
           pkgs.git
           pkgs.curl
           pkgs.cacert
+          pkgs.bash
           pkgs.code-server
         ];
 
@@ -58,15 +57,27 @@
       in {
         devShells.default = pkgs.mkShell { packages = devPkgs; };
 
-        packages.dev      = mkImage {
-          name     = "api-base";
-          tag      = "dev";
+        packages.dev = pkgs.dockerTools.buildImage {
+          name = "api-base";
+          tag  = "dev";
+          fromImage = pkgs.dockerTools.pullImage {
+            imageName = "debian";
+            imageTag = "bookworm-slim";
+            imageDigest = "sha256:b1a741487078b369e78119849663d7f1a5341ef2768798f7b7406c4240f86aef";
+            sha256 = "sha256-GsiMvKEcc1SbPNJubtU0xFNBbno5PMiQY9pxKRcbeK0=";
+          };
           contents = devPkgs;
-          workdir  = "/workspace";
-          cmd      = [
-            "sleep"
-            "infinity"
-          ];
+          config = {
+            WorkingDir = "/workspace";
+            Cmd = [ "sleep" "infinity" ];
+            Env = [
+              "PATH=${pkgs.lib.makeBinPath devPkgs}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              "LANG=C.UTF-8"
+              "LC_ALL=C.UTF-8"
+              "HOME=/root"
+            ];
+            User = "root";
+          };
         };
         packages.runtime  = mkImage {
           name     = "api-base";
