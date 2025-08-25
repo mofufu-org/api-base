@@ -23,6 +23,7 @@
         devPkgs   = commonPkgs ++ [
           pkgs.git
           pkgs.curl
+          pkgs.cacerts
           pkgs.busybox
         ];
         rtPkgs    = commonPkgs;
@@ -75,7 +76,6 @@
               paths       = devPkgs;
               pathsToLink = [ "/bin" ];
             })
-            pkgs.cacerts
           ];
           config = {
             WorkingDir = "/workspace";
@@ -85,6 +85,7 @@
               "LC_ALL=C.UTF-8"
               "HOME=/root"
               "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
               "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
               "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt"
               "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"
