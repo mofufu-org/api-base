@@ -31,7 +31,7 @@
           pkgs.git
           pkgs.curl
           pkgs.bash
-          pkgs.openvscode-server
+          pkgs.code-server
         ];
 
         mkImage = { name, tag, contents, workdir, cmd ? null }:
@@ -39,16 +39,27 @@
             inherit name tag contents;
             config = {
               WorkingDir = workdir;
-              Env = [ "LANG=C.UTF-8" "LC_ALL=C.UTF-8" "HOME=/root" "PATH=/bin:/usr/bin:/sbin:/usr/sbin" ];
+              Env = [
+                "LANG=C.UTF-8"
+                "LC_ALL=C.UTF-8"
+                "HOME=/root"
+                "PATH=/bin:/usr/bin:/sbin:/usr/sbin"
+
+                "SSL_CERT_FILE=/etc/ssl/certs/ca-bunble.crt"
+                "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bunble.crt"
+                "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bunble.crt"
+              ];
               Cmd = if cmd == null then null else cmd;
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc bin tmp root/.vscode-oss/extensions
+              mkdir -p etc etc/ssl/certs bin tmp root/.vscode-oss/extensions
               chmod 1777 tmp
 
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
+
+              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bunble.crt etc/ssl/certs/ca-bunble.crt
             '';
           };
       in {
