@@ -45,22 +45,15 @@
                 "LC_ALL=C.UTF-8"
                 "HOME=/root"
                 "PATH=/bin:/usr/bin:/sbin:/usr/sbin"
-
-                "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
-                "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt"
-                "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"
               ];
               Cmd = if cmd == null then null else cmd;
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc etc/ssl/certs bin tmp root/.vscode-oss/extensions
-              chmod 1777 tmp
+              mkdir -p etc bin
 
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
-
-              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt
             '';
           };
       in {
@@ -68,7 +61,25 @@
 
         packages.dev      = mkImage { name="api-base"; tag="dev";      contents=devPkgs;   workdir="/workspace"; cmd=[ "sleep" "infinity" ]; };
         packages.runtime  = mkImage { name="api-base"; tag="runtime";  contents=rtPkgs;    workdir="/app";       };
-        packages.webui    = mkImage { name="api-base"; tag="webui";    contents=webuiPkgs; workdir="/workspace"; cmd=[ "code-server" "--host" "0.0.0.0" "--port" "8080" "--disable-telemetry" "--extensions-dir" "/root/.vscode-oss/extensions" ]; };
+        packages.webui    = mkImage {
+          name     ="api-base";
+          tag      = "webui";
+          contents = webuiPkgs;
+          workdir  = "/workspace";
+          cmd      = [
+            "mkdir -p etc/ssl/certs tmp root/.vscode-oss/extensions"
+
+            "chmod 1777 tmp"
+
+            "ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt"
+            
+            "code-server"
+            "--auth none"
+            "--cert /etc/ssl/certs/ca-bundle.crt"
+            "--bind-addr 127.0.0.1:8080"
+            "--extensions-dir /root/.vscode-oss/extensions"
+          ];
+        };
 
         packages.default  = self.packages.${system}.dev;
       }
