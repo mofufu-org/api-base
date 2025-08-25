@@ -81,14 +81,15 @@
             User = "root";
           };
           extraCommands = ''
-            mkdir -p bin etc
+            mkdir -p ./bin ./usr/bin ./etc
 
             echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
             echo "root:x:0:" > etc/group
 
-            ln -sf ${pkgs.busybox}/bin/busybox bin/busybox
-            bin/busybox --install -s ./bin
-            bin/busybox --install -s ./usr/bin
+            cp ${pkgs.busybox}/bin/busybox ./bin/busybox
+
+            ./bin/busybox --install -s ./bin
+            ./bin/busybox --install -s ./usr/bin
           '';
         };
         packages.runtime  = mkImage {
