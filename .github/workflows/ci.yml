@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [ webui ]
+        target: [ runtime, webui ]
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27

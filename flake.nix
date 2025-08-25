@@ -35,30 +35,22 @@
           pkgs.code-server
         ];
 
-        mkImage = { name, tag, contents, workdir, cmd ? null }:
+        mkImage = { name, tag, contents, workdir, env, cmd, ecmd? null }:
           pkgs.dockerTools.buildLayeredImage {
             inherit name tag contents;
             config = {
               WorkingDir = workdir;
-              Env = [
+              Env = env ++ [
                 "LANG=C.UTF-8"
                 "LC_ALL=C.UTF-8"
                 "HOME=/root"
                 "PATH=/bin:/usr/bin:/sbin:/usr/sbin"
-
-                "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
-                "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt"
-                "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"
               ];
               Cmd = if cmd == null then null else cmd;
               User = "root";
             };
-            extraCommands = ''
-              mkdir -p etc bin etc/ssl/certs tmp root/.vscode-oss/extensions
-
-              chmod 1777 tmp
-
-              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt
+            extraCommands = ecmd ++ ''
+              mkdir -p etc bin
 
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
@@ -88,6 +80,11 @@
           tag      = "webui";
           contents = webuiPkgs;
           workdir  = "/workspace";
+          env      = [
+            "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+            "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt"
+            "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"
+          ];
           cmd      = [
             "code-server"
             "/workplace"
@@ -95,6 +92,13 @@
             "--bind-addr"      "0.0.0.0:8080"
             "--extensions-dir" "/root/.vscode-oss/extensions"
           ];
+          ecmd     = ''
+            mkdir -p etc/ssl/certs root/.vscode-oss/extensions tmp
+
+            chmod 1777 tmp
+
+            ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt
+          '';
         };
 
         packages.default  = self.packages.${system}.dev;
