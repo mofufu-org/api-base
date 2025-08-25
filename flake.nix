@@ -46,9 +46,9 @@
                 "HOME=/root"
                 "PATH=/bin:/usr/bin:/sbin:/usr/sbin"
 
-                "SSL_CERT_FILE=/etc/ssl/certs/ca-bunble.crt"
-                "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bunble.crt"
-                "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bunble.crt"
+                "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+                "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt"
+                "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"
               ];
               Cmd = if cmd == null then null else cmd;
               User = "root";
@@ -60,7 +60,7 @@
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
 
-              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bunble.crt etc/ssl/certs/ca-bunble.crt
+              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt
             '';
           };
       in {
