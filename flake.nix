@@ -9,9 +9,9 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
-        erlang  = pkgs.erlang_26;
-        elixir  = pkgs.beam.packages.erlang_26.elixir_1_16;
-        psql    = pkgs.postgresql_16;
+        erlang = pkgs.erlang_26;
+        elixir = pkgs.beam.packages.erlang_26.elixir_1_16;
+        psql   = pkgs.postgresql_16;
 
         commonPkgs = [
           pkgs.openssl
@@ -72,10 +72,10 @@
             WorkingDir = "/workspace";
             Cmd = [ "sleep" "infinity" ];
             Env = [
-              "PATH=${pkgs.lib.makeBinPath devPkgs}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               "LANG=C.UTF-8"
               "LC_ALL=C.UTF-8"
               "HOME=/root"
+              "PATH=${pkgs.lib.makeBinPath devPkgs}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             ];
             User = "root";
           };
