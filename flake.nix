@@ -86,12 +86,12 @@
             echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
             echo "root:x:0:" > etc/group
 
-            cp ${pkgs.busybox}/bin/busybox ./usr/bin/busybox
+            [ -x ./usr/bin/busybox ] || cp ${pkgs.busybox}/bin/busybox ./usr/bin/busybox && chmod +x ./usr/bin/busybox
 
             mkdir -p ./bin
-            ln -s ../usr/bin/busybox ./bin/sh
+            [ -e ./bin/sh ] || ln -s ../usr/bin/busybox ./bin/sh
 
-            ln -s busybox ./usr/bin/env
+            [ -e ./usr/bin/env ] || ln -s busybox ./usr/bin/env
           '';
         };
         packages.runtime  = mkImage {
