@@ -46,13 +46,11 @@
               User = "root";
             };
             extraCommands = ''
-              mkdir -p etc
+              mkdir -p etc usr/bin bin
+              ln -sf ${pkgs.coreutils}/bin/env usr/bin/env
+              ln -sf ${pkgs.bashInteractive}/bin/bash bin/sh
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
-              mkdir -p usr/bin bin
-              ln -sf $(pkgs.coreutils)/bin/env usr/bin/env
-              ln -sf $(pkgs.bashInteractive)/bin/bash bin/sh
-              touch etc/ld.so.cache
             '';
           };
       in {
