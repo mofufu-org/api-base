@@ -27,11 +27,11 @@
               Cmd = if cmd == null then null else cmd;
               User = "root";
             };
-            extraCommands = "
+            extraCommands = ''
               mkdir -p etc
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
-            ";
+            '';
           };
       in {
         devShells.default = pkgs.mkShell { packages = devPkgs; };
