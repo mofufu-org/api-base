@@ -31,6 +31,7 @@
           pkgs.git
           pkgs.curl
           pkgs.bash
+          pkgs.cacert
           pkgs.code-server
         ];
 
@@ -44,6 +45,10 @@
                 "LC_ALL=C.UTF-8"
                 "HOME=/root"
                 "PATH=/bin:/usr/bin:/sbin:/usr/sbin"
+
+                "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+                "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt"
+                "GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"
               ];
               Cmd = if cmd == null then null else cmd;
               User = "root";
@@ -85,6 +90,7 @@
           workdir  = "/workspace";
           cmd      = [
             "code-server"
+            "/workplace"
             "--auth"           "none"
             "--bind-addr"      "0.0.0.0:8080"
             "--extensions-dir" "/root/.vscode-oss/extensions"
