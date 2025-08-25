@@ -35,7 +35,7 @@
           pkgs.code-server
         ];
 
-        mkImage = { name, tag, contents, workdir, env, cmd, ecmd? null }:
+        mkImage = { name, tag, contents, workdir, env? [], cmd? null, ecmd? "" }:
           pkgs.dockerTools.buildLayeredImage {
             inherit name tag contents;
             config = {
@@ -87,7 +87,7 @@
           ];
           cmd      = [
             "code-server"
-            "/workplace"
+            "/workspace"
             "--auth"           "none"
             "--bind-addr"      "0.0.0.0:8080"
             "--extensions-dir" "/root/.vscode-oss/extensions"
