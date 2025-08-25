@@ -51,6 +51,7 @@
               ln -sf ${pkgs.bashInteractive}/bin/bash bin/sh
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
+              touch etc/ld.so.cache
             '';
           };
       in {
