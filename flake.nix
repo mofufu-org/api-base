@@ -23,7 +23,6 @@
         devPkgs   = commonPkgs ++ [
           pkgs.git
           pkgs.curl
-          pkgs.cacerts
           pkgs.busybox
         ];
         rtPkgs    = commonPkgs;
@@ -76,6 +75,7 @@
               paths       = devPkgs;
               pathsToLink = [ "/bin" ];
             })
+            pkgs.cacert
           ];
           config = {
             WorkingDir = "/workspace";
