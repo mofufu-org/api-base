@@ -24,12 +24,13 @@
           pkgs.git
           pkgs.curl
           pkgs.busybox
-          pkgs.glibc.bin
+          pkgs.glibc
         ];
         rtPkgs    = commonPkgs;
         webuiPkgs = commonPkgs ++ [
           pkgs.git
           pkgs.curl
+          pkgs.bash
           pkgs.openvscode-server
         ];
 
