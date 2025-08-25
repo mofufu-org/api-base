@@ -23,6 +23,7 @@
         devPkgs   = commonPkgs ++ [
           pkgs.git
           pkgs.curl
+          pkgs.busybox
         ];
         rtPkgs    = commonPkgs;
         webuiPkgs = commonPkgs ++ [
@@ -79,6 +80,10 @@
             ];
             User = "root";
           };
+          extraCommands = ''
+            mkdir -p bin
+            ln -sf ${pkgs.busybox}/bin/busybox bin/sh
+          '';
         };
         packages.runtime  = mkImage {
           name     = "api-base";
