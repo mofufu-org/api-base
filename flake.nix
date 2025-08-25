@@ -76,6 +76,10 @@
               pathsToLink = [ "/bin" ];
             })
             pkgs.cacert
+            (pkgs.runCommand "ca-alias" {} ''
+              mkdir -p $out/etc/ssl/certs
+              ln -s ca-bundle.crt $out/etc/ssl/certs/ca-certificates.crt
+            '')
           ];
           config = {
             WorkingDir = "/workspace";
@@ -92,10 +96,6 @@
             ];
             User = "root";
           };
-          extraCommands = ''
-            mkdir -p etc/ssl/certs
-            ln -sf /etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
-          '';
         };
         packages.runtime  = mkImage {
           name     = "api-base";
