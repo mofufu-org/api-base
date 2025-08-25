@@ -50,11 +50,11 @@
               User = "root";
             };
             extraCommands = ''
-              "mkdir -p etc bin etc/ssl/certs tmp root/.vscode-oss/extensions"
+              mkdir -p etc bin etc/ssl/certs tmp root/.vscode-oss/extensions
 
-              "chmod 1777 tmp"
+              chmod 1777 tmp
 
-              "ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt"
+              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-bundle.crt
 
               echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
               echo "root:x:0:" > etc/group
