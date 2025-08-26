@@ -1,8 +1,0 @@
-{
-  "name": "mofufu-api-base-dev",
-  "image": "ghcr.io/mofufu-org/api-base:dev",
-  "workspaceFolder": "/workspace",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
-  "forwardPorts": [4000, 5432],
-  "postCreateCommand": "mix local.hex --force && mix local.rebar --force"
-}
